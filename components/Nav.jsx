@@ -9,23 +9,24 @@ import Menu from "@mui/material/Menu";
 import Button from "@mui/material/Button";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import Link from "next/link";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { useRouter } from "next/router";
+import { auth } from "../utils/firebase";
 
 const Nav = ({ children }) => {
     const darkTheme = createTheme({
         palette: {
             mode: "dark",
             primary: {
-                main: "#00000",
+                main: "rgb(31 41 55 )",
             },
         },
     });
 
-    const [auth, setAuth] = React.useState(false);
-    const [anchorEl, setAnchorEl] = React.useState(null);
+    const router = useRouter();
 
-    const handleChange = (event) => {
-        setAuth(event.target.checked);
-    };
+    const [user, loading] = useAuthState(auth);
+    const [anchorEl, setAnchorEl] = React.useState(null);
 
     const handleMenu = (event) => {
         setAnchorEl(event.currentTarget);
@@ -35,6 +36,13 @@ const Nav = ({ children }) => {
         setAnchorEl(null);
     };
 
+    const handleSignOut = () => {
+        auth.signOut();
+        handleClose();
+        router.push("/");
+        
+    };
+
     return (
         <>
             <ThemeProvider theme={darkTheme}>
@@ -42,7 +50,7 @@ const Nav = ({ children }) => {
                     position="static"
                     color="primary"
                     enableColorOnDark
-                    className=" px-20"
+                    className=" px-20 text-white sticky top-0 z-20"
                 >
                     <Toolbar>
                         <Typography
@@ -52,17 +60,22 @@ const Nav = ({ children }) => {
                         >
                             Gif Or Jif
                         </Typography>
-                        {auth && (
+                        {user && !loading && (
                             <div>
                                 <IconButton
                                     size="large"
                                     aria-label="account of current user"
                                     aria-controls="menu-appbar"
                                     aria-haspopup="true"
-                                    onClick={handleMenu}
                                     color="inherit"
+                                    onClick={handleMenu}
                                 >
-                                    <AccountCircle />
+                                    <img
+                                        src={user.photoURL}
+                                        alt="avatar"
+                                        className="rounded-full h-10 w-10"
+                                        reffererpolicy="no-referrer"
+                                    />
                                 </IconButton>
                                 <Menu
                                     id="menu-appbar"
@@ -82,15 +95,17 @@ const Nav = ({ children }) => {
                                     <MenuItem onClick={handleClose}>
                                         Profile
                                     </MenuItem>
-                                    <MenuItem onClick={handleClose}>
+                                    <MenuItem onClick={() => handleSignOut()}>
                                         Logout
                                     </MenuItem>
                                 </Menu>
                             </div>
                         )}
-                        <Button color="inherit">
-                            <Link href="/auth/login">Login</Link>
-                        </Button>
+                        {!user && !loading && (
+                            <Button color="inherit">
+                                <Link href="/auth/login">Login</Link>
+                            </Button>
+                        )}
                     </Toolbar>
                 </AppBar>
             </ThemeProvider>
