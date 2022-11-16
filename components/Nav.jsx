@@ -36,6 +36,11 @@ const Nav = ({ children }) => {
         setAnchorEl(null);
     };
 
+    const handleProfile = () => {
+        handleClose();
+        router.push("/profile");
+    };
+
     const handleSignOut = () => {
         auth.signOut();
         handleClose();
@@ -92,7 +97,7 @@ const Nav = ({ children }) => {
                                     open={Boolean(anchorEl)}
                                     onClose={handleClose}
                                 >
-                                    <MenuItem onClick={handleClose}>
+                                    <MenuItem onClick={()=>handleProfile()}>
                                         Profile
                                     </MenuItem>
                                     <MenuItem onClick={() => handleSignOut()}>
