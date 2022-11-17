@@ -20,13 +20,29 @@ const New = () => {
     };
 
     const [category, setCategory] = useState("");
+    const [title, setTitle] = useState("");
 
     return (
         <div className="px-20 my-10">
             <h2 className="text-white text-4xl text-center">Add a new Gif</h2>
-            <div className="my-20 flex flex-col items-center justify-center">
+            <div className="my-20 flex flex-col items-start w-[60%] mx-auto">
+                <h2 className="text-white text-2xl">Add a Title</h2>
+
+                <input type="text"
+                    className="w-full bg-gray-800 text-white rounded-md px-5 py-2 my-5"
+                    placeholder="Enter a title"
+                    value = {title}
+                    onChange = {(e) => setTitle(e.target.value)}
+
+                />
+
+                <h2
+                    className="text-white text-2xl"
+
+                >Upload your Gif</h2>
                 <input
                     style={{ display: "none" }}
+
                     id="raised-button-file"
                     multiple
                     type="file"
@@ -34,14 +50,16 @@ const New = () => {
                 <label htmlFor="raised-button-file">
                     <Button
                         variant="raised"
-                        className="text-white border border-white border-1"
+                        className="text-white bg-gray-800 rounded-md px-5 py-2 my-5"
                         component="span"
                     >
                         Upload
                     </Button>
                 </label>
 
-                <div className="input-container my-10 py-4 px-2 gap-2 flex flex-wrap border-white border-1 border w-[50%] ">
+                <h2 className="text-white text-2xl">Add a Tags</h2>
+
+                <div className="input-container my-5 py-4 px-2 gap-2 flex flex-wrap bg-gray-800 rounded-md w-full">
                     {tags.map((tag) => (
                         <Chip
                             label={tag}
@@ -52,7 +70,7 @@ const New = () => {
                     <input
                         type="text"
                         onKeyDown={handleKeyDown}
-                        className="text-white bg-gray-900 outline-0"
+                        className="text-white bg-gray-800 outline-0"
                         placeholder="Type here"
                         value={category}
                         onChange={(e) => {
@@ -62,7 +80,7 @@ const New = () => {
                 </div>
                 <Button
                     variant="filled"
-                    className="text-white border border-white border-1"
+                    className="text-white border border-white border-1 mt-4 w-[40%] bg-green-600 hover:bg-green-700 transition-all duration-200 self-center"
                     component="span"
                 >
                     Submit

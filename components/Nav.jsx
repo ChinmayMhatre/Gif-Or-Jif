@@ -45,7 +45,6 @@ const Nav = ({ children }) => {
         auth.signOut();
         handleClose();
         router.push("/");
-        
     };
 
     return (
@@ -62,8 +61,9 @@ const Nav = ({ children }) => {
                             variant="h6"
                             component="div"
                             sx={{ flexGrow: 1 }}
+                            className="cursor-pointer"
                         >
-                            Gif Or Jif
+                            <Link href="/">Gif Or Jif</Link>
                         </Typography>
                         {user && !loading && (
                             <div>
@@ -97,7 +97,7 @@ const Nav = ({ children }) => {
                                     open={Boolean(anchorEl)}
                                     onClose={handleClose}
                                 >
-                                    <MenuItem onClick={()=>handleProfile()}>
+                                    <MenuItem onClick={() => handleProfile()}>
                                         Profile
                                     </MenuItem>
                                     <MenuItem onClick={() => handleSignOut()}>

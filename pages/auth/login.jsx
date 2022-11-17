@@ -2,10 +2,13 @@ import React,{useEffect} from "react";
 import { FcGoogle } from "react-icons/fc";
 import { FaFacebook } from "react-icons/fa";
 import {GoogleAuthProvider, signInWithPopup} from "firebase/auth";
-import {auth} from "../../utils/firebase"; 
+import {auth,db} from "../../utils/firebase"; 
+import { doc, setDoc, getDoc } from "firebase/firestore"; 
 import { useRouter } from "next/dist/client/router";
 import { useAuthState } from "react-firebase-hooks/auth";
+
 const Login = () => {
+    console.log((new Date()).toLocaleDateString('en-GB'))
     const [user,loading] = useAuthState(auth)
     const router = useRouter();
     const googleProvider = new GoogleAuthProvider();
@@ -13,8 +16,21 @@ const Login = () => {
     const signInWithGoogle = async () => {
         try {
             const result = await signInWithPopup(auth, googleProvider);
-            console.log(result);
-            router.push("/");            
+            console.log(result.user);
+
+            const exists = await getDoc(doc(db, "users", result.user.uid));
+            if (!exists.exists()) {
+                console.log("created");
+                const user = {
+                    name: result.user.displayName,
+                    email: result.user.email,
+                    photoUrl: result.user.photoURL,
+                    uid: result.user.uid,
+                    joined: (new Date()).toLocaleDateString('en-GB'),
+                };
+                await setDoc(doc(db, "users", result.user.uid), user);
+            }
+            router.push("/");      
         } catch (error) {
             console.log(error);
         }
@@ -22,7 +38,6 @@ const Login = () => {
 
     useEffect(() => {
         if(user){
-            console.log(user);
             router.push("/");
         }
     }, [user])
