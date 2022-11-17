@@ -21,7 +21,7 @@ export default function Home() {
                 <h1 className="text-4xl font-bold text-center text-white my-10">
                     All the Gifs
                 </h1>
-                <div className="grid grid-cols-3 justify-center items-center gap-10">
+                <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 justify-center items-center gap-10">
                     <GifCard/>
                     <GifCard/>
                     <GifCard/>
