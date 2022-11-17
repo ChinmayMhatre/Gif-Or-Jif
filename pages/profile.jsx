@@ -1,37 +1,54 @@
 import { auth, db } from "../utils/firebase";
 import { useRouter } from "next/dist/client/router";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Avatar from "@mui/material/Avatar";
 import { deepOrange, deepPurple } from "@mui/material/colors";
 import GifCard from "../components/GifCard";
 import Button from "@mui/material/Button";
-import { doc, setDoc, getDoc } from "firebase/firestore";
-import { useState } from "react";
+import { doc, getDoc, collection, onSnapshot } from "firebase/firestore";
 
 export default function Profile() {
     const [user, loading] = useAuthState(auth);
     const router = useRouter();
     const [userData, setUserData] = useState(null);
+    const [posts, setPosts] = useState([]);
 
     useEffect(() => {
         if (!user) {
             router.push("/");
         }
         if (user) {
-            const getUserData = async () => {
-                const docRef = doc(db, "users", user.uid);
-                const docSnap = await getDoc(docRef);
-                if (docSnap.exists()) {
-                    setUserData(docSnap.data());
-                } else {
-                    // doc.data() will be undefined in this case
-                    console.log("No such document!");
-                }
-            };
             getUserData();
+            getUserPosts();
         }
     }, [user]);
+
+    const getUserData = async () => {
+        const docRef = doc(db, "users", user.uid);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+            setUserData(docSnap.data());
+        } else {
+            // doc.data() will be undefined in this case
+            console.log("No such document!");
+        }
+    };
+
+    const getUserPosts = async () => {
+        const unsubscribe = await onSnapshot(
+            collection(db, "posts"),
+            (querySnapshot) => {
+                const posts = [];
+                querySnapshot.forEach((doc) => {
+                    if (doc.data().user === user.uid) {
+                        posts.push({ id: doc.id, ...doc.data() });
+                    }
+                });
+                setPosts(posts);
+            }
+        );
+    };
 
     return (
         <div className="px-20">
@@ -56,12 +73,10 @@ export default function Profile() {
                     </Button>
                 </div>
                 <div className="grid grid-cols-3 justify-center items-center gap-10">
-                    <GifCard />
-                    <GifCard />
-                    <GifCard />
-                    <GifCard />
-                    <GifCard />
-                    <GifCard />
+                    {posts &&
+                        posts.map((post) => (
+                            <GifCard key={post.id} post={post} />
+                        ))}
                 </div>
             </div>
         </div>

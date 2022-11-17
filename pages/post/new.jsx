@@ -1,15 +1,30 @@
 import React from "react";
 import Button from "@mui/material/Button";
 import Chip from "@mui/material/Chip";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { v4 } from "uuid";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { storage } from "../../utils/firebase";
-const {useRouter} = require('next/router')
+import { storage, auth, db } from "../../utils/firebase";
+import { doc, addDoc, collection } from "firebase/firestore";
+import { useAuthState } from "react-firebase-hooks/auth";
+
+import { ToastContainer, toast } from "react-toastify";
+const { useRouter } = require("next/router");
+import "react-toastify/dist/ReactToastify.css";
 
 const New = () => {
+    const [user, loading] = useAuthState(auth);
+
     const [imageUpload, setImageUpload] = useState(null);
     const [tags, setTags] = useState([]);
+    const [title, setTitle] = useState("");
+
+    useEffect(() => {
+        if (!user) {
+            router.push("/");
+        }
+    }, [user]);
+
     const router = useRouter();
     const handleDelete = (tag) => {
         console.info("You clicked the delete icon.");
@@ -18,15 +33,48 @@ const New = () => {
     };
 
     const handleUpload = (e) => {
-        if (imageUpload == null) return;
+        if (imageUpload == null || title.trim() == "") {
+            toast.error("Please fill all the fields", { theme: "dark" });
+            return;
+        }
         const imageRef = ref(storage, `images/${imageUpload.name + v4()}`);
         setButtonDisabled(true);
         uploadBytes(imageRef, imageUpload).then((snapshot) => {
-            getDownloadURL(snapshot.ref).then((url) => {
-                console.log("uploaded image url", url);
-            });
-            setButtonDisabled(false);
-            router.push("/");
+            getDownloadURL(snapshot.ref)
+                .then((url) => {
+                    console.log("uploaded image url", url);
+                    const newPost = {
+                        title,
+                        tags,
+                        url,
+                        user: user.uid,
+                        createdAt: new Date().toISOString(),
+                        likes: [],
+                        comments: [],
+                    };
+                    addDoc(collection(db, "posts"), newPost)
+                        .then((docRef) => {
+                            console.log(
+                                "Document written with ID: ",
+                                docRef.id
+                            );
+                            toast.success("Post Created", { theme: "dark" });
+                            setTimeout(() => {
+                                setButtonDisabled(false);
+                                router.push("/profile");
+                            }, 1000);
+                        })
+                        .catch((error) => {
+                            console.error("Error adding document: ", error);
+                            toast.error("Error adding document", {
+                                theme: "dark",
+                            });
+                        });
+                })
+                .catch((error) => {
+                    console.log(error);
+                    toast.error("Something went wrong", { theme: "dark" });
+                });
         });
     };
 
@@ -39,7 +87,6 @@ const New = () => {
     };
 
     const [category, setCategory] = useState("");
-    const [title, setTitle] = useState("");
     const [buttonDisabled, setButtonDisabled] = useState(false);
 
     return (
@@ -53,6 +100,7 @@ const New = () => {
                     className="w-full bg-gray-800 text-white rounded-md px-5 py-2 my-5"
                     placeholder="Enter a title"
                     value={title}
+                    disabled={buttonDisabled}
                     onChange={(e) => setTitle(e.target.value)}
                 />
 
@@ -62,6 +110,8 @@ const New = () => {
                     id="raised-button-file"
                     multiple
                     type="file"
+                    accept="image/gif"
+                    disabled={buttonDisabled}
                     onChange={(e) => setImageUpload(e.target.files[0])}
                 />
                 <label htmlFor="raised-button-file">
@@ -89,6 +139,7 @@ const New = () => {
                         onKeyDown={handleKeyDown}
                         className="text-white bg-gray-800 outline-0 w-full"
                         placeholder="Type here"
+                        disabled={buttonDisabled}
                         value={category}
                         onChange={(e) => {
                             setCategory(e.target.value);
@@ -105,6 +156,7 @@ const New = () => {
                     Submit
                 </Button>
             </div>
+            <ToastContainer />
         </div>
     );
 };

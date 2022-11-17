@@ -2,10 +2,27 @@ import Head from "next/head";
 import Image from "next/image";
 import styles from "../styles/Home.module.css";
 import GifCard from "../components/GifCard";
-
+import {db} from '../utils/firebase';
+import { collection, onSnapshot } from "firebase/firestore";
+import { useEffect, useState } from "react";
 
 export default function Home() {
-  const numberArray = Array.from(Array(100).keys());
+    const [posts, setPosts] = useState([]);
+
+    useEffect(() => {
+        const getPosts = async () => {
+            const unsubscribe = await onSnapshot(collection(db, "posts"), (querySnapshot) => {
+                const posts = [];
+                querySnapshot.forEach((doc) => {
+                    posts.push({id: doc.id, ...doc.data()});
+                });
+                setPosts(posts);
+            });
+        };
+        getPosts();
+    }, []);
+
+
     return (
         <div className={styles.container}>
             <Head>
@@ -22,12 +39,11 @@ export default function Home() {
                     All the Gifs
                 </h1>
                 <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 justify-center items-center gap-10">
-                    <GifCard/>
-                    <GifCard/>
-                    <GifCard/>
-                    <GifCard/>
-                    <GifCard/>
-                    <GifCard/>
+                 {
+                    posts && posts.map((post) => (
+                        <GifCard key={post.id} post={post} />
+                    ))
+                 }
                 </div>
             </main>
         </div>

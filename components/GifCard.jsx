@@ -6,23 +6,27 @@ import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import Chip from "@mui/material/Chip";
 
-const GifCard = () => {
+const GifCard = ({post}) => {
     return (
         <Card className=" ">
             <CardMedia
                 component="img"
                 height="140"
-                image="https://images.pexels.com/photos/462402/pexels-photo-462402.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+                image={post?.url}
                 alt="green iguana"
             />
             <CardContent className="bg-gray-800 text-white">
                 <Typography variant="h5" component="div">
-                    Lizard
+                    {post.title}
                 </Typography>
+                <h3 className="text-gray-500">
+                    created by : username
+                </h3>
                 <div className=" flex gap-2 pt-4 items-center">
-                    <Chip label="Basic" className="bg-gray-700 text-white" />
-                    <Chip label="Basic" className="bg-gray-700 text-white" />
-                    <Chip label="Basic" className="bg-gray-700 text-white" />
+                    {post.tags.map((tag) => (
+                        <Chip label={tag} className="bg-gray-700 text-white" />
+                    ))}
+
                 </div>
             </CardContent>
         </Card>
