@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { auth, db } from "../../utils/firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { query, where, collection, getDocs } from "firebase/firestore";
+import { query, where, collection, getDoc, doc } from "firebase/firestore";
 import Chip from "@mui/material/Chip";
 import { getStorage, ref, getDownloadURL } from "firebase/storage";
 import axios from "axios";
@@ -23,11 +23,8 @@ const Post = () => {
     }, []);
 
     const getPost = async () => {
-        const q = query(collection(db, "posts"), where("pid", "==", pid));
-        const querySnapshot = await getDocs(q);
-        querySnapshot.forEach((doc) => {
-            setPost(doc.data());
-        });
+        const querySnapshot = await getDoc(doc(db, "posts", pid));
+            setPost(querySnapshot.data());
     };
 
     // const downloadImage = async () => {

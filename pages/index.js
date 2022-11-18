@@ -2,27 +2,41 @@ import Head from "next/head";
 import Image from "next/image";
 import styles from "../styles/Home.module.css";
 import GifCard from "../components/GifCard";
-import {db} from '../utils/firebase';
-import { collection, onSnapshot } from "firebase/firestore";
+import { db } from "../utils/firebase";
+import { collection, onSnapshot, doc, updateDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 
 export default function Home() {
     const [posts, setPosts] = useState([]);
+    const [isliked, setIsliked] = useState(false);
 
     useEffect(() => {
         const getPosts = async () => {
-            const unsubscribe = await onSnapshot(collection(db, "posts"), (querySnapshot) => {
-                const posts = [];
-                querySnapshot.forEach((doc) => {
-                    posts.push({id: doc.id, ...doc.data()});
-                });
-                setPosts(posts);
-            });
+            const unsubscribe = await onSnapshot(
+                collection(db, "posts"),
+                (querySnapshot) => {
+                    const posts = [];
+                    querySnapshot.forEach((doc) => {
+                        posts.push({ id: doc.id, ...doc.data() });
+                    });
+                    setPosts(posts);
+                    // check if userid present in likes
+                    // if yes then set isliked to true
+                    // else set isliked to false
+                    posts.forEach((post) => {
+                        const result = post.likes.find((id) => id === user.uid);
+                        if (result) {
+                            setIsliked(true);
+                        } else {
+                            setIsliked(false);
+                        }
+                    });
+                }
+            );
         };
         getPosts();
     }, []);
-
 
     return (
         <div className={styles.container}>
@@ -40,13 +54,12 @@ export default function Home() {
                     All the Gifs
                 </h1>
                 <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 justify-center items-center gap-10">
-                 {
-                    posts && posts.map((post) => (
-                        <Link href={`/post/${post.pid}`}>
-                        <GifCard key={post.id} post={post} />
-                        </Link>
-                    ))
-                 }
+                    {posts &&
+                        posts.map((post) => (
+                            <Link href={`/post/${post.pid}`}>
+                                <GifCard key={post.id} post={post} isliked={isliked} />
+                            </Link>
+                        ))}
                 </div>
             </main>
         </div>

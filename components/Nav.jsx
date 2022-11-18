@@ -65,6 +65,9 @@ const Nav = ({ children }) => {
                         >
                             <Link href="/">Gif Or Jif</Link>
                         </Typography>
+                        <div className="bg-gray-600 mr-2 my-4 cursor-pointer text-lg rounded-lg font-semibold py-2 px-4 ">
+                            <Link href="/post/new">Upload</Link>
+                        </div>
                         {user && !loading && (
                             <div>
                                 <IconButton
@@ -111,6 +114,7 @@ const Nav = ({ children }) => {
                                 <Link href="/auth/login">Login</Link>
                             </Button>
                         )}
+                        
                     </Toolbar>
                 </AppBar>
             </ThemeProvider>

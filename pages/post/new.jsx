@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import { v4 } from "uuid";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { storage, auth, db } from "../../utils/firebase";
-import { doc, addDoc, collection } from "firebase/firestore";
+import { doc, setDoc, collection } from "firebase/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
 
 import { ToastContainer, toast } from "react-toastify";
@@ -21,7 +21,7 @@ const New = () => {
 
     useEffect(() => {
         if (!user) {
-            router.push("/");
+            router.push("/login");
         }
     }, [user]);
 
@@ -43,8 +43,9 @@ const New = () => {
             getDownloadURL(snapshot.ref)
                 .then((url) => {
                     console.log("uploaded image url", url);
+                    const pid = v4();
                     const newPost = {
-                        pid: v4(),
+                        pid,
                         title,
                         tags,
                         url,
@@ -54,12 +55,8 @@ const New = () => {
                         likes: [],
                         comments: [],
                     };
-                    addDoc(collection(db, "posts"), newPost)
-                        .then((docRef) => {
-                            console.log(
-                                "Document written with ID: ",
-                                docRef.id
-                            );
+                    setDoc(doc(db, "posts",pid), newPost)
+                        .then(() => {
                             toast.success("Post Created", { theme: "dark" });
                             setTimeout(() => {
                                 setButtonDisabled(false);

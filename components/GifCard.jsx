@@ -5,32 +5,40 @@ import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import Chip from "@mui/material/Chip";
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 
-const GifCard = ({post}) => {
+const GifCard = ({post,isliked}) => {
     return (
-        <Card className=" ">
-            <CardMedia
-                component="img"
-                height="140"
-                image={post?.url}
-                className=" max-h-60 object-cover "
-                alt="green iguana"
-            />
-            <CardContent className="bg-gray-800 text-white max-h-36">
-                <Typography variant="h5" component="div">
+        <div className=" relative max-h-60 group rounded-lg ">
+        <div className="absolute bg-black group-hover:opacity-50 rounded-lg h-full w-full opacity-0 transition-all duration-100">
+
+        </div>
+        <div className="absolute top-0 left-0 right-0 group-hover:scale-100  transition-all duration-100 scale-0 p-4">
+            <div className="flex items-center">
+            {isliked ? <FavoriteIcon className="text-red-500" /> : <FavoriteBorderIcon className="text-white" />}
+            <p className="text-white pl-1">{post.likes.length}</p>
+            </div>
+
+
+        </div>
+
+            <img src={post?.url} className = "max-h-60 rounded-lg  w-full object-cover" alt="card image" />
+            <div className="bg-none absolute scale-0 group-hover:scale-100 transition-all duration-100 bottom-0 text-white p-4 ">
+                <h5 className="text-white text-2xl">
                     {post.title}
-                </Typography>
-                <h3 className="text-gray-500">
-                    created by : username
+                </h5>
+                <h3 className="text-gray-300">
+                    created by : {post.userName}
                 </h3>
-                <div className=" flex gap-2 pt-4 items-center">
+                <div className=" flex gap-2 pt-2 items-center">
                     {post.tags.map((tag) => (
                         <Chip label={tag} className="bg-gray-700 text-white" />
                     ))}
 
                 </div>
-            </CardContent>
-        </Card>
+            </div>
+        </div>
     );
 };
 
