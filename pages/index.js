@@ -5,6 +5,7 @@ import GifCard from "../components/GifCard";
 import {db} from '../utils/firebase';
 import { collection, onSnapshot } from "firebase/firestore";
 import { useEffect, useState } from "react";
+import Link from "next/link";
 
 export default function Home() {
     const [posts, setPosts] = useState([]);
@@ -41,7 +42,9 @@ export default function Home() {
                 <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 justify-center items-center gap-10">
                  {
                     posts && posts.map((post) => (
+                        <Link href={`/post/${post.pid}`}>
                         <GifCard key={post.id} post={post} />
+                        </Link>
                     ))
                  }
                 </div>

@@ -44,11 +44,13 @@ const New = () => {
                 .then((url) => {
                     console.log("uploaded image url", url);
                     const newPost = {
+                        pid: v4(),
                         title,
                         tags,
                         url,
                         user: user.uid,
-                        createdAt: new Date().toISOString(),
+                        userName: user.displayName,
+                        createdAt: (new Date()).toLocaleDateString('en-GB'),
                         likes: [],
                         comments: [],
                     };

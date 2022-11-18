@@ -13,9 +13,10 @@ const GifCard = ({post}) => {
                 component="img"
                 height="140"
                 image={post?.url}
+                className=" max-h-60 object-cover "
                 alt="green iguana"
             />
-            <CardContent className="bg-gray-800 text-white">
+            <CardContent className="bg-gray-800 text-white max-h-36">
                 <Typography variant="h5" component="div">
                     {post.title}
                 </Typography>
