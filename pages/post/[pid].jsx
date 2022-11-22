@@ -2,29 +2,73 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { auth, db } from "../../utils/firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { query, where, collection, getDoc, doc } from "firebase/firestore";
+import {
+    query,
+    where,
+    collection,
+    getDoc,
+    setDoc,
+    doc,
+} from "firebase/firestore";
 import Chip from "@mui/material/Chip";
 import { getStorage, ref, getDownloadURL } from "firebase/storage";
 import axios from "axios";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import AiOutlineLoading3Quarters from "@mui/icons-material/";
+import { BeatLoader } from "react-spinners";
+
+export async function getServerSideProps(context) {
+    return {
+        props: {},
+    };
+}
 
 const Post = () => {
-    const [user] = useAuthState(auth);
+    const [user,loading] = useAuthState(auth);
+    const [isliked, setIsliked] = useState(false);
+    const [loadingLike, setLoadingLike] = useState(false);
+    const handleLike = async () => {
+        try {
+            setLoadingLike(true);
+            const postRef = doc(db, "posts", router.query.pid);
+            const postDoc = await getDoc(postRef);
+            const post = postDoc.data();
+            const liked = post.likes.find((like) => like == user.uid);
+            if (liked) {
+                const newLikes = post.likes.filter((like) => like != user.uid);
+                await setDoc(postRef, { likes: newLikes }, { merge: true });
+                setIsliked(false);
+            } else {
+                await setDoc(
+                    postRef,
+                    { likes: [...post.likes, user.uid] },
+                    { merge: true }
+                );
+                setIsliked(true);
+            }
+            setLoadingLike(false);
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
     const router = useRouter();
     const { pid } = router.query;
     const [post, setPost] = useState(null);
-    const [downloadUrl, setDownloadUrl] = useState(null);
 
     useEffect(() => {
-        console.log(pid);
-        if (pid) {
+        if (pid ) {
             getPost();
-            // downloadImage();
         }
     }, []);
 
     const getPost = async () => {
         const querySnapshot = await getDoc(doc(db, "posts", pid));
-            setPost(querySnapshot.data());
+        setPost(querySnapshot.data());
+        if (querySnapshot.data().likes.find((like) => like == user.uid)) {
+            setIsliked(true);
+        }
     };
 
     // const downloadImage = async () => {
@@ -67,7 +111,9 @@ const Post = () => {
                         <h1 className="text-6xl my-5 font-bold  text-white ">
                             {post.title}
                         </h1>
-                        <h3 className="text-gray-500">created by : username</h3>
+                        <h3 className="text-gray-500">
+                            created by : {post.userName}
+                        </h3>
                         <div className=" flex gap-2 pt-4 items-center">
                             {post.tags.map((tag) => (
                                 <Chip
@@ -76,6 +122,25 @@ const Post = () => {
                                 />
                             ))}
                         </div>
+                        <div className=" flex gap-4 items-start">
+                            <button
+                                onClick={handleLike}
+                                className="bg-gray-700 px-6 py-4 rounded-lg fount-bold text-white mb-10 hover:bg-gray-800 transition-all duration-200"
+                            >
+                                {loadingLike ? (
+                                    <BeatLoader color="white" size={10} />
+                                ) : isliked ? (
+                                    <>
+                                    <FavoriteIcon className="text-red-500 mr-2" />
+                                    Liked
+                                    </>
+                                ) : (
+                                    <>
+                                    <FavoriteBorderIcon className="text-red-500 mr-2" />
+                                    Like
+                                    </>
+                                )}
+                            </button>
                             <a
                                 href={post.url}
                                 download="text.gif"
@@ -83,11 +148,15 @@ const Post = () => {
                             >
                                 Download
                             </a>
+                        </div>
                     </div>
                 </div>
             )}
-
-            <h2>Related Gifs</h2>
+            <div className=" px-20 py-10">
+                <h2 className="text-4xl text-white font-semibold">
+                    Related Gifs
+                </h2>
+            </div>
         </div>
     );
 };

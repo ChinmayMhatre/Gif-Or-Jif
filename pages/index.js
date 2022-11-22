@@ -2,14 +2,16 @@ import Head from "next/head";
 import Image from "next/image";
 import styles from "../styles/Home.module.css";
 import GifCard from "../components/GifCard";
-import { db } from "../utils/firebase";
+import { db,auth } from "../utils/firebase";
 import { collection, onSnapshot, doc, updateDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
+import {useAuthState} from 'react-firebase-hooks/auth'
 import Link from "next/link";
 
 export default function Home() {
     const [posts, setPosts] = useState([]);
     const [isliked, setIsliked] = useState(false);
+    const [user, loading] = useAuthState(auth);
 
     useEffect(() => {
         const getPosts = async () => {
