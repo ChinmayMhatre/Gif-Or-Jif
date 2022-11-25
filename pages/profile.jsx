@@ -72,7 +72,7 @@ export default function Profile() {
                         Add New Gif
                     </Button>
                 </div>
-                <div className="grid grid-cols-3 justify-center items-center gap-10">
+                <div className="lg:columns-3 md:columns-2 columns-1 gap-10">
                     {posts &&
                         posts.map((post) => (
                             <GifCard key={post.id} post={post} />

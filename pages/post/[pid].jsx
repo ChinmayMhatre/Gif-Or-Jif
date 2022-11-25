@@ -25,7 +25,7 @@ export async function getServerSideProps(context) {
 }
 
 const Post = () => {
-    const [user,loading] = useAuthState(auth);
+    const [user, loading] = useAuthState(auth);
     const [isliked, setIsliked] = useState(false);
     const [loadingLike, setLoadingLike] = useState(false);
     const handleLike = async () => {
@@ -50,6 +50,7 @@ const Post = () => {
             setLoadingLike(false);
         } catch (error) {
             console.log(error);
+            setLoadingLike(false);
         }
     };
 
@@ -58,7 +59,7 @@ const Post = () => {
     const [post, setPost] = useState(null);
 
     useEffect(() => {
-        if (pid ) {
+        if (pid) {
             getPost();
         }
     }, []);
@@ -66,7 +67,7 @@ const Post = () => {
     const getPost = async () => {
         const querySnapshot = await getDoc(doc(db, "posts", pid));
         setPost(querySnapshot.data());
-        if (querySnapshot.data().likes.find((like) => like == user.uid)) {
+        if (querySnapshot.data().likes.find((like) => like == user?.uid)) {
             setIsliked(true);
         }
     };
@@ -122,25 +123,28 @@ const Post = () => {
                                 />
                             ))}
                         </div>
+
                         <div className=" flex gap-4 items-start">
-                            <button
-                                onClick={handleLike}
-                                className="bg-gray-700 px-6 py-4 rounded-lg fount-bold text-white mb-10 hover:bg-gray-800 transition-all duration-200"
-                            >
-                                {loadingLike ? (
-                                    <BeatLoader color="white" size={10} />
-                                ) : isliked ? (
-                                    <>
-                                    <FavoriteIcon className="text-red-500 mr-2" />
-                                    Liked
-                                    </>
-                                ) : (
-                                    <>
-                                    <FavoriteBorderIcon className="text-red-500 mr-2" />
-                                    Like
-                                    </>
-                                )}
-                            </button>
+                            {user && (
+                                <button
+                                    onClick={handleLike}
+                                    className="bg-gray-700 px-6 py-4 rounded-lg fount-bold text-white mb-10 hover:bg-gray-800 transition-all duration-200"
+                                >
+                                    {loadingLike ? (
+                                        <BeatLoader color="white" size={10} />
+                                    ) : isliked ? (
+                                        <>
+                                            <FavoriteIcon className="text-red-500 mr-2" />
+                                            Liked
+                                        </>
+                                    ) : (
+                                        <>
+                                            <FavoriteBorderIcon className="text-red-500 mr-2" />
+                                            Like
+                                        </>
+                                    )}
+                                </button>
+                            )}
                             <a
                                 href={post.url}
                                 download="text.gif"

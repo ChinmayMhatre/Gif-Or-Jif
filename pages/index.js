@@ -27,7 +27,7 @@ export default function Home() {
                     // if yes then set isliked to true
                     // else set isliked to false
                     posts.forEach((post) => {
-                        const result = post.likes.find((id) => id === user.uid);
+                        const result = post.likes.find((id) => id === user?.uid);
                         if (result) {
                             setIsliked(true);
                         } else {
@@ -55,12 +55,10 @@ export default function Home() {
                 <h1 className="text-4xl font-bold text-center text-white my-10">
                     All the Gifs
                 </h1>
-                <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 justify-center items-center gap-10">
+                <div className="lg:columns-3 md:columns-2 columns-1 gap-10 ">
                     {posts &&
                         posts.map((post) => (
-                            <Link href={`/post/${post.pid}`}>
                                 <GifCard key={post.id} post={post} isliked={isliked} />
-                            </Link>
                         ))}
                 </div>
             </main>
