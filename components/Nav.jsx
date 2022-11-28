@@ -63,10 +63,10 @@ const Nav = ({ children }) => {
                             sx={{ flexGrow: 1 }}
                             className="cursor-pointer"
                         >
-                            <Link href="/">Gif Or Jif</Link>
+                            <Link href="/" className="text-white">Gif Or Jif</Link>
                         </Typography>
                         <div className="bg-gray-600 mr-2 my-4 cursor-pointer text-lg rounded-lg font-semibold py-2 px-4 ">
-                            <Link href="/post/new">Upload</Link>
+                            <Link href="/post/new" className="text-white">Upload</Link>
                         </div>
                         {user && !loading && (
                             <div>
