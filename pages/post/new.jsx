@@ -103,25 +103,15 @@ const New = () => {
                     onChange={(e) => setTitle(e.target.value)}
                 />
 
-                <h2 className="text-white text-2xl">Upload your Gif</h2>
+                <h2 className="text-white text-2xl ">Upload your Gif</h2>
                 <input
-                    style={{ display: "none" }}
+                    className="w-full bg-gray-800 text-white rounded-md px-5 py-2 my-5"
                     id="raised-button-file"
                     multiple
                     type="file"
                     accept="image/gif"
-                    disabled={buttonDisabled}
                     onChange={(e) => setImageUpload(e.target.files[0])}
                 />
-                <label htmlFor="raised-button-file">
-                    <Button
-                        variant="raised"
-                        className="text-white bg-gray-800 rounded-md px-5 py-2 my-5"
-                        component="span"
-                    >
-                        Upload
-                    </Button>
-                </label>
 
                 <h2 className="text-white text-2xl">Add a Tags</h2>
 

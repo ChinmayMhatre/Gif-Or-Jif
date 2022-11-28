@@ -18,11 +18,6 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import AiOutlineLoading3Quarters from "@mui/icons-material/";
 import { BeatLoader } from "react-spinners";
 
-// export async function getServerSideProps(context) {
-//     return {
-//         props: {},
-//     };
-// }
 
 const Post = () => {
     const [user, loading] = useAuthState(auth);
@@ -59,10 +54,10 @@ const Post = () => {
     const [post, setPost] = useState(null);
 
     useEffect(() => {
-        if (pid) {
+        if (router.isReady) {
             getPost();
         }
-    }, []);
+    }, [router.isReady]);
 
     const getPost = async () => {
         const querySnapshot = await getDoc(doc(db, "posts", pid));
