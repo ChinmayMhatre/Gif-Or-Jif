@@ -8,11 +8,14 @@ import Chip from "@mui/material/Chip";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import Link from "next/link";
+import {useRouter}  from "next/router";
 
 const GifCard = ({ post, isliked }) => {
+    const router = useRouter();
     return (
-        <div className=" relative group rounded-lg overflow-hidden mt-10">
-            <Link href={`/post/${post.pid}`}>
+        <div className=" relative group rounded-lg overflow-hidden mt-10" onClick={() => router.push(`/post/${post.id}`)}
+        >
+            {/* <Link href={`/post/${post.pid}`}> */}
                 <div className="absolute bg-black z-10 group-hover:opacity-50 rounded-lg h-full w-full opacity-0 transition-all duration-100"></div>
                 <div className="absolute top-0 left-0 right-0 z-20 group-hover:opacity-100  transition-all duration-100 opacity-0 p-4">
                     <div className="flex items-center">
@@ -43,7 +46,7 @@ const GifCard = ({ post, isliked }) => {
                         ))}
                     </div>
                 </div>
-            </Link>
+            {/* </Link> */}
         </div>
     );
 };

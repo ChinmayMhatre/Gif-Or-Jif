@@ -18,11 +18,11 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import AiOutlineLoading3Quarters from "@mui/icons-material/";
 import { BeatLoader } from "react-spinners";
 
-export async function getServerSideProps(context) {
-    return {
-        props: {},
-    };
-}
+// export async function getServerSideProps(context) {
+//     return {
+//         props: {},
+//     };
+// }
 
 const Post = () => {
     const [user, loading] = useAuthState(auth);

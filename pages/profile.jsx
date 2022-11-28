@@ -7,6 +7,7 @@ import { deepOrange, deepPurple } from "@mui/material/colors";
 import GifCard from "../components/GifCard";
 import Button from "@mui/material/Button";
 import { doc, getDoc, collection, onSnapshot } from "firebase/firestore";
+import Link from "next/link";
 
 export default function Profile() {
     const [user, loading] = useAuthState(auth);
@@ -36,18 +37,22 @@ export default function Profile() {
     };
 
     const getUserPosts = async () => {
-        const unsubscribe = await onSnapshot(
-            collection(db, "posts"),
-            (querySnapshot) => {
-                const posts = [];
-                querySnapshot.forEach((doc) => {
-                    if (doc.data().user === user.uid) {
-                        posts.push({ id: doc.id, ...doc.data() });
-                    }
-                });
-                setPosts(posts);
-            }
-        );
+        try {
+            const unsubscribe = await onSnapshot(
+                collection(db, "posts"),
+                (querySnapshot) => {
+                    const posts = [];
+                    querySnapshot.forEach((doc) => {
+                        if (doc.data().user === user.uid) {
+                            posts.push({ id: doc.id, ...doc.data() });
+                        }
+                    });
+                    setPosts(posts);
+                }
+            );
+        } catch (e) {
+            console.log(e);
+        }
     };
 
     return (
@@ -75,7 +80,9 @@ export default function Profile() {
                 <div className="lg:columns-3 md:columns-2 columns-1 gap-10">
                     {posts &&
                         posts.map((post) => (
-                            <GifCard key={post.id} post={post} />
+                            <Link href={`/post/${post.id}`} key={post.id}>
+                                <GifCard key={post.id} post={post} />
+                            </Link>
                         ))}
                 </div>
             </div>

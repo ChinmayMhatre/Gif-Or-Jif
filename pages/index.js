@@ -15,27 +15,28 @@ export default function Home() {
 
     useEffect(() => {
         const getPosts = async () => {
-            const unsubscribe = await onSnapshot(
-                collection(db, "posts"),
-                (querySnapshot) => {
-                    const posts = [];
-                    querySnapshot.forEach((doc) => {
-                        posts.push({ id: doc.id, ...doc.data() });
-                    });
-                    setPosts(posts);
-                    // check if userid present in likes
-                    // if yes then set isliked to true
-                    // else set isliked to false
-                    posts.forEach((post) => {
-                        const result = post.likes.find((id) => id === user?.uid);
-                        if (result) {
-                            setIsliked(true);
-                        } else {
-                            setIsliked(false);
-                        }
-                    });
-                }
-            );
+            try{
+                const unsubscribe = await onSnapshot(
+                    collection(db, "posts"),
+                    (querySnapshot) => {
+                        const posts = [];
+                        querySnapshot.forEach((doc) => {
+                            posts.push({ id: doc.id, ...doc.data() });
+                        });
+                        setPosts(posts);
+                        posts.forEach((post) => {
+                            const result = post.likes.find((id) => id === user?.uid);
+                            if (result) {
+                                setIsliked(true);
+                            } else {
+                                setIsliked(false);
+                            }
+                        });
+                    }
+                );
+            } catch(e){
+                console.log(e);
+            }
         };
         getPosts();
     }, []);
