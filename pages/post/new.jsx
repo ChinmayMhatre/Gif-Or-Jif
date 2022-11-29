@@ -21,7 +21,7 @@ const New = () => {
 
     useEffect(() => {
         if (!user) {
-            router.push("/login");
+            router.push("/auth/login");
         }
     }, [user]);
 
