@@ -54,7 +54,7 @@ const Nav = ({ children }) => {
                     position="static"
                     color="primary"
                     enableColorOnDark
-                    className=" px-20 text-white sticky top-0 z-20"
+                    className=" px-10 md:px-20 lg:px-40 text-white sticky top-0 z-20"
                 >
                     <Toolbar>
                         <Typography
@@ -63,58 +63,70 @@ const Nav = ({ children }) => {
                             sx={{ flexGrow: 1 }}
                             className="cursor-pointer"
                         >
-                            <Link href="/" className="text-white">Gif Or Jif</Link>
+                            <Link href="/" className="text-white">
+                                Gif Or Jif
+                            </Link>
                         </Typography>
-                        <div className="bg-gray-600 mr-2 my-4 cursor-pointer text-lg rounded-lg font-semibold py-2 px-4 ">
-                            <Link href="/post/new" className="text-white">Upload</Link>
-                        </div>
                         {user && !loading && (
-                            <div>
-                                <IconButton
-                                    size="large"
-                                    aria-label="account of current user"
-                                    aria-controls="menu-appbar"
-                                    aria-haspopup="true"
-                                    color="inherit"
-                                    onClick={handleMenu}
-                                >
-                                    <img
-                                        src={user.photoURL}
-                                        alt="avatar"
-                                        className="rounded-full h-10 w-10"
-                                        reffererpolicy="no-referrer"
-                                    />
-                                </IconButton>
-                                <Menu
-                                    id="menu-appbar"
-                                    anchorEl={anchorEl}
-                                    anchorOrigin={{
-                                        vertical: "bottom",
-                                        horizontal: "right",
-                                    }}
-                                    keepMounted
-                                    transformOrigin={{
-                                        vertical: "top",
-                                        horizontal: "right",
-                                    }}
-                                    open={Boolean(anchorEl)}
-                                    onClose={handleClose}
-                                >
-                                    <MenuItem onClick={() => handleProfile()}>
-                                        Profile
-                                    </MenuItem>
-                                    <MenuItem onClick={() => handleSignOut()}>
-                                        Logout
-                                    </MenuItem>
-                                </Menu>
-                            </div>
+                            <>
+                                <div className="bg-gray-600 mr-2 my-4 cursor-pointer text-lg rounded-lg font-semibold py-2 px-4 ">
+                                    <Link
+                                        href="/post/new"
+                                        className="text-white"
+                                    >
+                                        Upload
+                                    </Link>
+                                </div>
+                                <div>
+                                    <IconButton
+                                        size="large"
+                                        aria-label="account of current user"
+                                        aria-controls="menu-appbar"
+                                        aria-haspopup="true"
+                                        color="inherit"
+                                        onClick={handleMenu}
+                                    >
+                                        <img
+                                            src={user.photoURL}
+                                            alt="avatar"
+                                            className="rounded-full h-10 w-10"
+                                            reffererpolicy="no-referrer"
+                                        />
+                                    </IconButton>
+                                    <Menu
+                                        id="menu-appbar"
+                                        anchorEl={anchorEl}
+                                        anchorOrigin={{
+                                            vertical: "bottom",
+                                            horizontal: "right",
+                                        }}
+                                        keepMounted
+                                        transformOrigin={{
+                                            vertical: "top",
+                                            horizontal: "right",
+                                        }}
+                                        open={Boolean(anchorEl)}
+                                        onClose={handleClose}
+                                    >
+                                        <MenuItem
+                                            onClick={() => handleProfile()}
+                                        >
+                                            Profile
+                                        </MenuItem>
+                                        <MenuItem
+                                            onClick={() => handleSignOut()}
+                                        >
+                                            Logout
+                                        </MenuItem>
+                                    </Menu>
+                                </div>
+                            </>
                         )}
                         {!user && !loading && (
-                            <Button color="inherit">
-                                <Link href="/auth/login">Login</Link>
+                            <Button>
+                                <Link href="/auth/login" className="bg-gray-600 mr-2 my-1 cursor-pointer rounded-lg font-semibold py-2 px-4 text-white">Login</Link>
                             </Button>
                         )}
-                        
                     </Toolbar>
                 </AppBar>
             </ThemeProvider>

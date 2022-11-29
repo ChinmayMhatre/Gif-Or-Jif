@@ -18,7 +18,6 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import AiOutlineLoading3Quarters from "@mui/icons-material/";
 import { BeatLoader } from "react-spinners";
 
-
 const Post = () => {
     const [user, loading] = useAuthState(auth);
     const [isliked, setIsliked] = useState(false);
@@ -91,9 +90,9 @@ const Post = () => {
     // }
 
     return (
-        <div className=" my-20">
+        <div className=" my-20 px-10 md:px-20 lg:px-60">
             {post && (
-                <div className="flex justify-center gap-20 px-20  ">
+                <div className="flex justify-center gap-20 ">
                     <div className="flex-1 justify-center ">
                         <a href={post.url} download="custom.gif" title="image">
                             <img
@@ -112,10 +111,9 @@ const Post = () => {
                         </h3>
                         <div className=" flex gap-2 pt-4 items-center">
                             {post.tags.map((tag) => (
-                                <Chip
-                                    label={tag}
-                                    className="bg-gray-700 text-white mb-10"
-                                />
+                                <div className="bg-gray-700 rounded-xl text-sm px-2 py-1 mb-5 text-white">
+                                    {tag}
+                                </div>
                             ))}
                         </div>
 

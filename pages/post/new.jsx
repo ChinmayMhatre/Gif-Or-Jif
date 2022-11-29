@@ -127,7 +127,7 @@ const New = () => {
                         type="text"
                         onKeyDown={handleKeyDown}
                         className="text-white bg-gray-800 outline-0 w-full"
-                        placeholder="Type here"
+                        placeholder="Type your tags and press enter"  
                         disabled={buttonDisabled}
                         value={category}
                         onChange={(e) => {

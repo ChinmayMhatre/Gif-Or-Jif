@@ -56,7 +56,7 @@ export default function Profile() {
     };
 
     return (
-        <div className="px-20">
+        <div className="px-10 md:px-20 lg:px-40">
             <div className="py-20 flex gap-10 items-center justify-center">
                 <img src={user ? user.photoURL : ""} className="rounded-full" />
 
@@ -77,12 +77,12 @@ export default function Profile() {
                         Add New Gif
                     </Button>
                 </div>
-                <div className="lg:columns-3 md:columns-2 columns-1 gap-10">
+                <div className=" lg:columns-4 md:columns-2 columns-1 gap-5">
                     {posts &&
                         posts.map((post) => (
-                            <Link href={`/post/${post.id}`} key={post.id}>
+                            /* <Link href={`/post/${post.id}`} key={post.id}> */
                                 <GifCard key={post.id} post={post} />
-                            </Link>
+                            /* </Link> */
                         ))}
                 </div>
             </div>

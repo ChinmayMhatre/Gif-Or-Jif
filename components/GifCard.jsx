@@ -13,7 +13,7 @@ import {useRouter}  from "next/router";
 const GifCard = ({ post, isliked }) => {
     const router = useRouter();
     return (
-        <div className=" relative group rounded-lg overflow-hidden mt-10" onClick={() => router.push(`/post/${post.id}`)}
+        <div className=" relative group rounded-lg overflow-hidden mt-5" onClick={() => router.push(`/post/${post.id}`)}
         >
             {/* <Link href={`/post/${post.pid}`}> */}
                 <div className="absolute bg-black z-10 group-hover:opacity-50 rounded-lg h-full w-full opacity-0 transition-all duration-100"></div>
@@ -39,10 +39,11 @@ const GifCard = ({ post, isliked }) => {
                     </h3>
                     <div className=" flex gap-2 pt-2 items-center">
                         {post.tags.map((tag) => (
-                            <Chip
-                                label={tag}
-                                className="bg-gray-700 text-white"
-                            />
+                            <div
+                                className="bg-gray-700 rounded-xl text-sm px-2 py-1 text-white"
+                            >
+                                {tag}
+                            </div>
                         ))}
                     </div>
                 </div>

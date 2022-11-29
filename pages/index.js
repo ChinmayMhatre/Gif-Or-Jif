@@ -52,11 +52,11 @@ export default function Home() {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
 
-            <main className="px-20">
+            <main className=" px-10 md:px-20 lg:px-40">
                 <h1 className="text-4xl font-bold text-center text-white my-10">
                     All the Gifs
                 </h1>
-                <div className="lg:columns-3 md:columns-2 columns-1 gap-10 ">
+                <div className="lg:columns-4 md:columns-2 columns-1 gap-5 ">
                     {posts &&
                         posts.map((post) => (
                                 <GifCard key={post.id} post={post} isliked={isliked} />
