@@ -129,7 +129,7 @@ const New = () => {
                         <Chip
                             label={tag}
                             onDelete={() => handleDelete(tag)}
-                            className="bg-gray-700 text-white"
+                            style={{ color: "white", backgroundColor: "#1a202c" }}
                         />
                     ))}
                     <input
@@ -144,15 +144,13 @@ const New = () => {
                         }}
                     />
                 </div>
-                <Button
-                    variant="filled"
-                    className="text-white border border-white border-1 mt-4 w-[40%] bg-green-600 hover:bg-green-700 transition-all duration-200 self-center"
-                    component="span"
+                <button
+                    className="text-white py-2 rounded-lg mt-4 w-[40%] bg-green-600 hover:bg-green-700 transition-all duration-200 self-center"
                     onClick={handleUpload}
                     disabled={buttonDisabled}
                 >
                     Submit
-                </Button>
+                </button>
             </div>
             <ToastContainer />
         </div>
