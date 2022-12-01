@@ -54,7 +54,7 @@ const Nav = ({ children }) => {
                     position="static"
                     color="primary"
                     enableColorOnDark
-                    className=" px-10 md:px-20 lg:px-40 text-white sticky top-0 z-20"
+                    className=" px-10 md:px-20 lg:px-40 text-white sticky top-0 z-50"
                 >
                     <Toolbar>
                         <Typography

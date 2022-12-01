@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import Head from "next/head";
+
 import { useRouter } from "next/router";
 import { auth, db } from "../../utils/firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -91,6 +93,16 @@ const Post = () => {
 
     return (
         <div className=" my-20 px-10 md:px-20 lg:px-60">
+        <Head>
+                <title>GiforJif - {post?.title}</title>
+                <meta
+                    name="description"
+                    content="
+                        Check out this awesome gif on GiforJif. Share your gifs with the world.
+                    "
+                />
+                <link rel="icon" href="/favicon.ico" />
+            </Head>
             {post && (
                 <div className="flex justify-center gap-20 ">
                     <div className="flex-1 justify-center ">

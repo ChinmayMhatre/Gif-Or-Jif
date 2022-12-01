@@ -1,4 +1,6 @@
 import { auth, db } from "../utils/firebase";
+import Head from "next/head";
+
 import { useRouter } from "next/dist/client/router";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useEffect, useState } from "react";
@@ -10,10 +12,13 @@ import { doc, getDoc, collection, onSnapshot } from "firebase/firestore";
 import Link from "next/link";
 
 export default function Profile() {
+    const [isliked, setIsliked] = useState(false);
+
     const [user, loading] = useAuthState(auth);
     const router = useRouter();
     const [userData, setUserData] = useState(null);
     const [posts, setPosts] = useState([]);
+    const [likedPosts,setLikedPosts] = useState([]);
 
     useEffect(() => {
         if (!user) {
@@ -37,19 +42,33 @@ export default function Profile() {
     };
 
     const getUserPosts = async () => {
+        let tempPosts = [];
         try {
             const unsubscribe = await onSnapshot(
                 collection(db, "posts"),
                 (querySnapshot) => {
-                    const posts = [];
                     querySnapshot.forEach((doc) => {
-                        if (doc.data().user === user.uid) {
-                            posts.push({ id: doc.id, ...doc.data() });
+                        // if (doc.data().user === user.uid) {
+                            tempPosts.push({ id: doc.id, ...doc.data() });
+                        // }
+                    });
+
+                    // liked posts
+                    const likedPosts = [];
+                    tempPosts.forEach((post) => {
+                        if (post.likes.includes(user.uid)) {
+                            likedPosts.push(post);
                         }
                     });
-                    setPosts(posts);
-                }
-            );
+                    setLikedPosts(likedPosts);
+    
+                    // user's post
+                    const userPosts = tempPosts.filter((post) => post.user === user.uid);
+    
+                    setPosts(userPosts);
+                    }
+                );
+
         } catch (e) {
             console.log(e);
         }
@@ -57,6 +76,16 @@ export default function Profile() {
 
     return (
         <div className="px-10 md:px-20 lg:px-40">
+        <Head>
+                <title>GiforJif - {user?.displayName}</title>
+                <meta
+                    name="description"
+                    content="
+                        Check out this awesome gif on GiforJif. Share your gifs with the world.
+                    "
+                />
+                <link rel="icon" href="/favicon.ico" />
+            </Head>
             <div className="py-20 flex gap-10 items-center justify-center">
                 <img src={user ? user.photoURL : ""} className="rounded-full" />
 
@@ -68,7 +97,7 @@ export default function Profile() {
             </div>
             <div className="">
                 <div className="flex justify-between items-center py-10">
-                    <h2 className="text-3xl text-white">My Posts</h2>
+                    <h2 className="text-3xl text-white">Your posts</h2>
                     <Button
                         variant="contained"
                         className="bg-gray-800"
@@ -77,11 +106,22 @@ export default function Profile() {
                         Add New Gif
                     </Button>
                 </div>
-                <div className=" lg:columns-4 md:columns-2 columns-1 gap-5">
+                <div className="mb-20 lg:columns-4 md:columns-2 columns-1 gap-5">
                     {posts &&
                         posts.map((post) => (
                             /* <Link href={`/post/${post.id}`} key={post.id}> */
-                                <GifCard key={post.id} post={post} />
+                                <GifCard key={post.id} post={post} isliked = {isliked} />
+                            /* </Link> */
+                        ))}
+                </div>
+                <div className="text-3xl my-10 text-white">
+                    The posts you like
+                </div>
+                <div className="mb-20 lg:columns-4 md:columns-2 columns-1 gap-5">
+                    {likedPosts &&
+                        likedPosts.map((post) => (
+                            /* <Link href={`/post/${post.id}`} key={post.id}> */
+                                <GifCard key={post.id} post={post} isliked = {isliked} />
                             /* </Link> */
                         ))}
                 </div>

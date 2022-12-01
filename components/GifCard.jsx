@@ -40,6 +40,7 @@ const GifCard = ({ post, isliked }) => {
                     <div className=" flex gap-2 pt-2 items-center">
                         {post.tags.map((tag) => (
                             <div
+                                key={tag}
                                 className="bg-gray-700 rounded-xl text-sm px-2 py-1 text-white"
                             >
                                 {tag}

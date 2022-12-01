@@ -44,10 +44,10 @@ export default function Home() {
     return (
         <div className={styles.container}>
             <Head>
-                <title>Create Next App</title>
+                <title>GiforJif - Home</title>
                 <meta
                     name="description"
-                    content="A template for nextjs with tailwindcss"
+                    content="Download and share the best GIFs now. GiforJif is a platform where you can share your favorite gifs with the world. "
                 />
                 <link rel="icon" href="/favicon.ico" />
             </Head>

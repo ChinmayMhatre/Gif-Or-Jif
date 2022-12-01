@@ -1,4 +1,5 @@
 import React from "react";
+import Head from "next/head";
 import Button from "@mui/material/Button";
 import Chip from "@mui/material/Chip";
 import { useState, useEffect } from "react";
@@ -51,11 +52,11 @@ const New = () => {
                         url,
                         user: user.uid,
                         userName: user.displayName,
-                        createdAt: (new Date()).toLocaleDateString('en-GB'),
+                        createdAt: new Date().toLocaleDateString("en-GB"),
                         likes: [],
                         comments: [],
                     };
-                    setDoc(doc(db, "posts",pid), newPost)
+                    setDoc(doc(db, "posts", pid), newPost)
                         .then(() => {
                             toast.success("Post Created", { theme: "dark" });
                             setTimeout(() => {
@@ -90,6 +91,14 @@ const New = () => {
 
     return (
         <div className="px-20 my-10">
+            <Head>
+                <title>GiforJif - Add new Gifs</title>
+                <meta
+                    name="description"
+                    content="Add new Gifs to GiforJif"
+                />
+                <link rel="icon" href="/favicon.ico" />
+            </Head>
             <h2 className="text-white text-4xl text-center">Add a new Gif</h2>
             <div className="my-20 flex flex-col items-start w-[60%] mx-auto">
                 <h2 className="text-white text-2xl">Add a Title</h2>
@@ -127,7 +136,7 @@ const New = () => {
                         type="text"
                         onKeyDown={handleKeyDown}
                         className="text-white bg-gray-800 outline-0 w-full"
-                        placeholder="Type your tags and press enter"  
+                        placeholder="Type your tags and press enter"
                         disabled={buttonDisabled}
                         value={category}
                         onChange={(e) => {
