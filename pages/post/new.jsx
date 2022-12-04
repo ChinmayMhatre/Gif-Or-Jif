@@ -144,6 +144,16 @@ const New = () => {
                         }}
                     />
                 </div>
+                <h2 className="text-white text-2xl">Add a Mood</h2>
+
+                <input
+                    type="text"
+                    className="w-full bg-gray-800 text-white rounded-md px-5 py-2 my-5"
+                    placeholder="Enter a title"
+                    value={title}
+                    disabled={buttonDisabled}
+                    onChange={(e) => setTitle(e.target.value)}
+                />
                 <button
                     className="text-white py-2 rounded-lg mt-4 w-[40%] bg-green-600 hover:bg-green-700 transition-all duration-200 self-center"
                     onClick={handleUpload}

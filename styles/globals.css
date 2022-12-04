@@ -4,6 +4,11 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+    font-family: 'Montserrat';
+    src: url("/Montserrat-VariableFont_wght.ttf");
+}
+
 body{
     background-color: rgb(17 24 39);
 }

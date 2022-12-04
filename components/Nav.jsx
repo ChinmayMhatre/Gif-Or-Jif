@@ -12,6 +12,8 @@ import Link from "next/link";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useRouter } from "next/router";
 import { auth } from "../utils/firebase";
+import Snowfall from 'react-snowfall'
+
 
 const Nav = ({ children }) => {
     const darkTheme = createTheme({
@@ -54,8 +56,13 @@ const Nav = ({ children }) => {
                     position="static"
                     color="primary"
                     enableColorOnDark
-                    className=" px-10 md:px-20 lg:px-40 text-white sticky top-0 z-50"
+                    className=" px-10 md:px-20 lg:px-40 font-montserrat text-white sticky top-0 z-50"
                 >
+                <Snowfall
+                    snowflakeCount={30}
+                    speed={[1.0, 1.0]}
+                    wind = {[-0.5, 0.5]}
+                />
                     <Toolbar>
                         <Typography
                             variant="h6"
@@ -64,7 +71,7 @@ const Nav = ({ children }) => {
                             className="cursor-pointer"
                         >
                             <Link href="/" className="text-white">
-                                Gif Or Jif
+                                Gif Jif
                             </Link>
                         </Typography>
                         {user && !loading && (
