@@ -1,5 +1,9 @@
 import { useEffect, useState } from "react";
 import Head from "next/head";
+import {
+    //deleteicon
+    FaTrash,
+} from "react-icons/fa";
 
 import { useRouter } from "next/router";
 import { auth, db } from "../../utils/firebase";
@@ -10,10 +14,12 @@ import {
     collection,
     getDoc,
     setDoc,
+    getDocs,
+    deleteDoc,
     doc,
 } from "firebase/firestore";
-import Chip from "@mui/material/Chip";
-import { getStorage, ref, getDownloadURL } from "firebase/storage";
+import GifCard from "../../components/GifCard";
+import { getStorage, ref, deleteObject } from "firebase/storage";
 import axios from "axios";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
@@ -24,6 +30,7 @@ const Post = () => {
     const [user, loading] = useAuthState(auth);
     const [isliked, setIsliked] = useState(false);
     const [loadingLike, setLoadingLike] = useState(false);
+    const [relatedPosts, setRelatedPosts] = useState([]);
     const handleLike = async () => {
         try {
             setLoadingLike(true);
@@ -57,6 +64,7 @@ const Post = () => {
     useEffect(() => {
         if (router.isReady) {
             getPost();
+            getRelatedPosts();
         }
     }, [router.isReady]);
 
@@ -65,6 +73,42 @@ const Post = () => {
         setPost(querySnapshot.data());
         if (querySnapshot.data().likes.find((like) => like == user?.uid)) {
             setIsliked(true);
+        }
+    };
+
+    const getRelatedPosts = async () => {
+        // get post with same tag
+
+        const querySnapshot = await getDocs(collection(db, "posts"));
+        const posts = querySnapshot.docs.map((doc) => doc.data());
+
+        const filteredPosts = posts.filter((post) => post.pid != pid);
+
+        const relatedPosts = filteredPosts.filter((p) =>
+            p.tags.includes(post?.tags[0])
+        );
+
+        setRelatedPosts(relatedPosts);
+        console.log(relatedPosts);
+    };
+
+    const deletePost = async () => {
+        //confirm if the user wants to delete the post
+        const confirm = window.confirm(
+            "Are you sure you want to delete this post?"
+        );
+        if (confirm) {
+            console.log(user);
+            if (user.uid == post.user) {
+                //get the storage ref using the url
+                const storage = getStorage();
+                const httpRef = ref(storage, post.url);
+                //delete the file
+                await deleteObject(httpRef);
+                //delete the post
+                await deleteDoc(doc(db, "posts", pid));
+                router.push("/");
+            }
         }
     };
 
@@ -93,7 +137,7 @@ const Post = () => {
 
     return (
         <div className=" my-20 px-10 md:px-20 lg:px-60">
-        <Head>
+            <Head>
                 <title>GiforJif - {post?.title}</title>
                 <meta
                     name="description"
@@ -104,7 +148,7 @@ const Post = () => {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
             {post && (
-                <div className="flex justify-center gap-20 ">
+                <div className="flex justify-center flex-col md:flex-row gap-20 ">
                     <div className="flex-1 justify-center ">
                         <a href={post.url} download="custom.gif" title="image">
                             <img
@@ -114,10 +158,16 @@ const Post = () => {
                             />
                         </a>
                     </div>
-                    <div className="flex-1 ">
+                    <div className="flex-1 relative">
                         <h1 className="text-6xl my-5 font-bold  text-white ">
                             {post.title}
                         </h1>
+                        <button
+                            onClick={deletePost}
+                            className=" text-center px-6 py-4 absolute top-7 right-0 rounded-lg text-white font-bold"
+                        >
+                            <FaTrash className="text-2xl" />
+                        </button>
                         <h3 className="text-gray-500">
                             created by : {post.userName}
                         </h3>
@@ -161,10 +211,22 @@ const Post = () => {
                     </div>
                 </div>
             )}
-            <div className=" px-20 py-10">
+            <div className=" py-20">
                 <h2 className="text-4xl text-white font-semibold">
                     Related Gifs
                 </h2>
+                {relatedPosts && (
+                    <div className="lg:columns-3 md:columns-2 columns-1 mt-10 gap-5">
+                        {relatedPosts.map((post) => (
+                            <GifCard post={post} />
+                        ))}
+                    </div>
+                )}
+                {relatedPosts.length == 0 && (
+                    <h3 className="text-white text-2xl font-semibold">
+                        No related gifs found
+                    </h3>
+                )}
             </div>
         </div>
     );

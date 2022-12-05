@@ -77,7 +77,7 @@ export default function Profile() {
     return (
         <div className="px-10 md:px-20 font-montserrat lg:px-40">
         <Head>
-                <title>GiforJif - {user?.displayName}</title>
+                <title>GifJif - {user?.displayName}</title>
                 <meta
                     name="description"
                     content="

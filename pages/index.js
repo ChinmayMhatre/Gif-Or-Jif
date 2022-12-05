@@ -87,7 +87,7 @@ export default function Home() {
     return (
         <div className="font-montserrat">
             <Head>
-                <title>GiforJif - Home</title>
+                <title>GifJif - Home</title>
                 <meta
                     name="description"
                     content="Download and share the best GIFs now. GiforJif is a platform where you can share your favorite gifs with the world. "
@@ -130,9 +130,12 @@ export default function Home() {
                                               selectedTag == tag
                                                   ? "text-black bg-white"
                                                   : "text-white"
-                                          }  font-bold text-md border-2 border-white align-self-center transition-all duration-150 rounded-full px-4 py-2 mt-2`}
+                                          }  font-bold text-md border-2 border-white align-self-center transition-all duration-150 rounded-lg px-4 py-2 mt-2`}
                                       >
                                           {tag}
+                                          <div className="text-gray-600">
+                                              {tags[tag]} Posts
+                                          </div>
                                       </button>
                                   ))
                                 : Object.keys(tags)
@@ -155,7 +158,7 @@ export default function Home() {
                         </div>
                     </div>
                 </div>
-                <div className="lg:columns-4 md:columns-2 columns-1 gap-5 ">
+                <div className="lg:columns-4 md:columns-2 columns-1 gap-5 my-20">
                     {filteredPosts &&
                         filteredPosts.map((post) => (
                             <GifCard

@@ -9,6 +9,22 @@
     src: url("/Montserrat-VariableFont_wght.ttf");
 }
 
+::-webkit-scrollbar{
+    width: 20px;
+
+}
+
+::-webkit-scrollbar-track{
+    background: rgb(31 41 55 );
+}
+
+::-webkit-scrollbar-thumb{
+    background: rgb(75 85 99);
+    border-radius: 5px;
+}
+
+
+
 body{
     background-color: rgb(17 24 39);
 }
